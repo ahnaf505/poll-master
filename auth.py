@@ -2,6 +2,8 @@ from database import *
 from generate import *
 
 def register_user(username, hashed_pswd):
+    if read_db("user_usn_"+username) != None:
+        return None
     rgstr_user_id = ""
     while True:
         curr_user_id = gen_user_id()
@@ -22,15 +24,29 @@ def login_user(username, hashed_pswd):
             start_time = time.time()
             fnl_sess_id = ""
             while True:
-                curr_sess_id = gen_session_id
-                if curr_sess_id == read_db("user_session_"+curr_sess_id):
+                curr_sess_id = gen_session_id()
+                if curr_sess_id == read_db("user_session_"+str(curr_sess_id)):
                     return
                 else:
                     fnl_sess_id = curr_sess_id
                     break
-            write_db("user_session_"+fnl_sess_id)
-            return fnl_sess_id
+            write_db("user_session_"+str(fnl_sess_id), str(round(start_time)))
+            return str(fnl_sess_id)
+        else:
+            return None
     else:
         return None
 
+def action(sess_id):
+    valid_dbtime = 0
+    curr_sess_id = read_db("user_session_"+sess_id)
+    if curr_sess_id == None:
+        return None
+    else:
+        valid_dbtime = int(curr_sess_id)
+    unix_time = int(time.time())
+    if unix_time - valid_dbtime > 1500:
+        return True
+    else:
+        return None
 # while time.time() - start_time < LOGIN_TIMEOUT:
