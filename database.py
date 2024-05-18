@@ -1,33 +1,22 @@
 import plyvel
+import logging
 
-def write_to_database(key, value):
-    db = plyvel.DB('polls_question.db', create_if_missing=True)
-    # Write data to the database
+logging.basicConfig(filename='app_db.dbglog', filemode='a+', format='%(asctime)s - %(levelname)s: %(message)s')
+
+def write_db(key, value):
+    db = plyvel.DB('polls.db', create_if_missing=True)
     with db.write_batch() as wb:
         wb.put(key.encode(), value.encode())
-
-    # Close the database
     db.close()
+    logging.info("Successfully read from database with key ("+key+") and value ("+value+")")
 
-def read_from_database(key):
-    # Open the LevelDB database
-    db = plyvel.DB('/path/to/database', create_if_missing=True)
-
-    # Read data from the database
+def read_db(key):
+    db = plyvel.DB('polls.db', create_if_missing=True)
     value = db.get(key.encode())
-
-    # Close the database
     db.close()
-
-    # Convert value to string if it exists
-    return value.decode() if value else None
-
-# Example usage
-write_to_database("key1", "value1")
-write_to_database("key2", "value2")
-
-value1 = read_from_database("key1")
-print("Value for key1:", value1)
-
-value2 = read_from_database("key2")
-print("Value for key2:", value2)
+    if value:
+        logging.info("Successfully read from database with key ("+key+")")
+        return value.decode()
+    else:
+        logging.error("Error reading database, no record for ("+key+")")
+        return None
