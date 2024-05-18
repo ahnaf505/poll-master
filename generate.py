@@ -2,6 +2,7 @@ import time
 import random
 import math
 import string
+import os
 
 usr_id_length = 29
 
@@ -15,3 +16,12 @@ def gen_user_id():
     multpld_numid = math.round(divd_numid * randint03)
     fnl_user_id = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + multpld_numid, k=usr_id_length))
     return str(fnl_user_id)
+
+def gen_session_id():
+    unix_time = int(time.time())
+    load_avg = os.getloadavg()
+    seed = int(sum(load_avg) * 1e6)
+    random.seed(seed)
+    fnl_sess_id = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + unix_time, k=usr_id_length))
+    return str(fnl_sess_id)
+
