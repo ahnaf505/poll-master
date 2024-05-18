@@ -37,9 +37,12 @@ def login_user(username, hashed_pswd):
     else:
         return None
 
-def logout_user(username, hashed_pswd):
-    if read_db("user_usn_"+username) != None:
+def logout_user(sess_id):
+    if read_db("user_session_"+sess_id) == None:
         return None
+    else:
+        delete_db("user_session_"+sess_id)
+        return
 
 def action(sess_id):
     valid_dbtime = 0
