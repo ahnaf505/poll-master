@@ -1,5 +1,6 @@
 from database import *
 from generate import *
+from config import *
 
 def register_user(username, hashed_pswd):
     if read_db("user_usn_"+username) != None:
@@ -52,8 +53,7 @@ def action(sess_id):
     else:
         valid_dbtime = int(curr_sess_id)
     unix_time = int(time.time())
-    if unix_time - valid_dbtime > 1500:
+    if unix_time - valid_dbtime < SESSION_TIMEOUT:
         return True
     else:
         return None
-# while time.time() - start_time < LOGIN_TIMEOUT:
