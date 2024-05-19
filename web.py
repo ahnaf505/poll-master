@@ -1,17 +1,17 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from auth import *
 from database import *
 
 app = FastAPI()
-
-polls = [
-    {"id": 1, "question": "What is your favorite color?", "options": ["Red", "Blue", "Green"]},
-    {"id": 2, "question": "Which programming language do you prefer?", "options": ["Python", "JavaScript", "Java"]},
-]
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
-def read_root():
-    return {"message": "Welcome to Poll Master! Use /polls to view available polls."}
+async def root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/polls")
 def read_polls():
@@ -33,7 +33,3 @@ def vote(poll_id: int, option: str):
             else:
                 return {"error": f"{option} is not a valid option for poll {poll_id}"}
     return {"error": "Poll not found"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
