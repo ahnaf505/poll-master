@@ -47,6 +47,8 @@ def logout_user(sess_id):
 
 def action(sess_id):
     valid_dbtime = 0
+    if sess_id == None:
+        return None
     curr_sess_id = read_db("user_session_"+sess_id)
     if curr_sess_id == None:
         return None

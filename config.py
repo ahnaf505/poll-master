@@ -1,3 +1,3 @@
 # Config Files
 
-SESSION_TIMEOUT = 5 # In seconds
+SESSION_TIMEOUT = 1500 # In seconds

@@ -1,14 +1,15 @@
 import plyvel
 import logging
 
-logging.basicConfig(filename='app_db.dbglog', filemode='a+', format='%(asctime)s - %(levelname)s: %(message)s')
+logging.basicConfig(filename='app_db.dbglog', level=logging.INFO, filemode='a+', format='%(asctime)s - %(levelname)s: %(message)s')
 
 def write_db(key, value):
     db = plyvel.DB('polls.db', create_if_missing=True)
     with db.write_batch() as wb:
         wb.put(key.encode(), value.encode())
+        logging.info("Successfully write to database with key ("+key+") and value ("+value+")")
     db.close()
-    logging.info("Successfully write to database with key ("+key+") and value ("+value+")")
+    return
 
 def read_db(key):
     db = plyvel.DB('polls.db', create_if_missing=True)
@@ -30,3 +31,5 @@ def delete_db(key):
         logging.error("Error deleting from database, no record for (" + key+")")
         return None
     db.close()
+
+write_db("aaaaa", "asjnjsnsnnd")

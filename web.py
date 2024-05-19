@@ -1,8 +1,9 @@
 from fastapi import FastAPI
+from auth import *
+from database import *
 
 app = FastAPI()
 
-# Dummy data for demonstration purposes
 polls = [
     {"id": 1, "question": "What is your favorite color?", "options": ["Red", "Blue", "Green"]},
     {"id": 2, "question": "Which programming language do you prefer?", "options": ["Python", "JavaScript", "Java"]},
